@@ -7,7 +7,51 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Widget {
-  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+model User {
+  id       String   @id @default(uuid())
+  username String   @unique
+  email    String   @unique
+  password String
+  name     String?
+  age      Int?
+  role     Role     @default(BASIC)
+  Saved    Saved[]
+  Post     Post[]
+  Topics   Topics[]
 }
 
+model Topics {
+  user   User     @relation(fields: [userId], references: [id])
+  userId String   @unique
+  topics String[]
+}
+
+model Post {
+  id               String   @id @default(uuid())
+  content          String
+  contentFormatted String
+  image            String
+  topic            String[]
+  title            String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  author           User     @relation(fields: [authorId], references: [id])
+  authorId         String
+
+  Saved Saved[]
+}
+
+model Saved {
+  user   User    @relation(fields: [userId], references: [id])
+  userId String
+  post   Post    @relation(fields: [postId], references: [id])
+  postId String
+  saved  Boolean
+
+  @@unique([userId, postId])
+}
+
+enum Role {
+  BASIC
+  ADMIN
+}
