@@ -1,7 +1,8 @@
 const router = require("express").Router();
 import { prisma } from "../index";
+const { verifyToken } = require("../token/verifyToken");
 
-router.post("/", async (req: any, res: any) => {
+router.post("/:id", verifyToken, async (req: any, res: any) => {
   try {
     const topics = await prisma.topics.create({
       data: {
@@ -18,7 +19,7 @@ router.post("/", async (req: any, res: any) => {
   }
 });
 
-router.delete("/", async (req: any, res: any) => {
+router.delete("/", verifyToken, async (req: any, res: any) => {
   try {
     const user = await prisma.user.update({
       where: {

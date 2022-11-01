@@ -1,5 +1,6 @@
 const router = require("express").Router();
 import { prisma } from "../index";
+const { verifyToken } = require("../token/verifyToken");
 
 const topics =["roba", "roba2", "roba3"]
 
@@ -29,7 +30,7 @@ const topics =["roba", "roba2", "roba3"]
 // });
 
 //CREATE POST
-router.post("/create", async (req: any, res: any) => {
+router.post("/create", verifyToken ,async (req: any, res: any) => {
   try {
     const post = await prisma.post.create({
       data: {
@@ -50,7 +51,7 @@ router.post("/create", async (req: any, res: any) => {
 });
 
 //FIND POST BY TOPIC
-router.get("/find/:topic", async (req: any, res: any) => {
+router.get("/find/:topic", verifyToken ,async (req: any, res: any) => {
   try {
     const posts = await prisma.post.findMany({
       where: {
