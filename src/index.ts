@@ -17,6 +17,19 @@ app.use("/api/auth", authRoutes)
 app.use("/api/post", postRoutes)
 app.use("/api/topics", topicsRoutes)
 
+// //HTTP ERROR HANDLER
+// app.use((req:any, res:any, next:any)=>{
+//   res.status(404).send("Could not find route");
+// })
+
+app.use((error:any , req:any, res:any, next:any) =>{
+  if(res.headerSent){
+    res.status(error.code || 500);
+    res.json({message: error.message || "Uknow error"})
+  }
+  next()
+})
+
 app.listen(process.env.PORT, () => {
   console.log("Server is running");
 });
