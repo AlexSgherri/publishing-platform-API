@@ -1,5 +1,6 @@
 const router = require("express").Router();
 import { prisma } from "../index";
+const CryptoJS = require("crypto-js");
 const jwt = require("jsonwebtoken");
 
 //REGISTER
@@ -9,7 +10,10 @@ router.post("/register", async (req: any, res: any) => {
       data: {
         username: req.body.username,
         email: req.body.email.toLowerCase(),
-        password: req.body.password,
+        password: CryptoJS.AES.encrypt(
+          req.body.password,
+          process.env.SECRET_PSW
+        ).toString(),
         age: req.body.age,
         name: req.body.name,
         role: req.body.role,
@@ -31,8 +35,14 @@ router.post("/login", async (req: any, res: any) => {
         username: { equals: req.body.username, mode: "insensitive" },
       },
     });
-    
-    if (!user || req.body.password !== user.password)
+
+    const hashedPsw = CryptoJS.AES.decrypt(
+      user.password,
+      process.env.SECRET_PSW
+    );
+    const psw = hashedPsw.toString(CryptoJS.enc.Utf8);
+
+    if (!user || req.body.password !== psw)
       res.status(401).json("Wrong Username or Password!");
 
     const accessToken = jwt.sign(
@@ -44,7 +54,9 @@ router.post("/login", async (req: any, res: any) => {
       { expiresIn: "3d" }
     );
 
-    res.status(200).json({user, accessToken});
+    const {password, ...others} = user
+
+    res.status(200).json({...others, accessToken});
   } catch (err) {
     res.status(404).json(err);
   } finally {

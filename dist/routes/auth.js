@@ -8,9 +8,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const router = require("express").Router();
 const index_1 = require("../index");
+const CryptoJS = require("crypto-js");
 const jwt = require("jsonwebtoken");
 //REGISTER
 router.post("/register", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -19,7 +31,7 @@ router.post("/register", (req, res) => __awaiter(void 0, void 0, void 0, functio
             data: {
                 username: req.body.username,
                 email: req.body.email.toLowerCase(),
-                password: req.body.password,
+                password: CryptoJS.AES.encrypt(req.body.password, process.env.SECRET_PSW).toString(),
                 age: req.body.age,
                 name: req.body.name,
                 role: req.body.role,
@@ -42,13 +54,16 @@ router.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 username: { equals: req.body.username, mode: "insensitive" },
             },
         });
-        if (!user || req.body.password !== user.password)
+        const hashedPsw = CryptoJS.AES.decrypt(user.password, process.env.SECRET_PSW);
+        const psw = hashedPsw.toString(CryptoJS.enc.Utf8);
+        if (!user || req.body.password !== psw)
             res.status(401).json("Wrong Username or Password!");
         const accessToken = jwt.sign({
             id: user.id,
             role: user.role,
         }, process.env.JWT_KEY, { expiresIn: "3d" });
-        res.status(200).json({ user, accessToken });
+        const { password } = user, others = __rest(user, ["password"]);
+        res.status(200).json(Object.assign(Object.assign({}, others), { accessToken }));
     }
     catch (err) {
         res.status(404).json(err);
