@@ -1,7 +1,7 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors")
-const authRoutes = require("./routes/register")
+const authRoutes = require("./routes/auth")
 const postRoutes = require("./routes/post")
 const topicsRoutes = require("./routes/topics")
 const { PrismaClient } = require("@prisma/client");
