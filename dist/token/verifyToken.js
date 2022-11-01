@@ -17,10 +17,10 @@ const verifyToken = (req, res, next) => {
         return res.status(401).json("You are not authenticated");
     }
 };
-//TOKEN WITH STANDARD LOGIN AUTHORIZATION
+//TOKEN WITH STANDARD LOGIN AUTHORIZATION (NOT DONE YET)
 const verifyTokenAndAuthorization = (req, res, next) => {
     verifyToken(req, res, () => {
-        if (req.user.id === req.params.id || req.user.role == "ADMIN") {
+        if (req.user.id || req.user.role == "ADMIN") {
             next();
         }
         else {
@@ -31,7 +31,7 @@ const verifyTokenAndAuthorization = (req, res, next) => {
 //TOKEN WITH ADMIN LOGIN AUTHORIZATION
 const verifyTokenAndAdmin = (req, res, next) => {
     verifyToken(req, res, () => {
-        if (req.user.isAdmin == "ADMIN") {
+        if (req.user.role == "ADMIN") {
             next();
         }
         else {

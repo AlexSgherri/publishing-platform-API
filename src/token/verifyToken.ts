@@ -19,10 +19,10 @@ const verifyToken = (req:any, res:any, next:any) => {
   }
 };
 
-//TOKEN WITH STANDARD LOGIN AUTHORIZATION
+//TOKEN WITH STANDARD LOGIN AUTHORIZATION (NOT DONE YET)
 const verifyTokenAndAuthorization = (req:any, res:any, next:any) => {
   verifyToken(req, res, () => {
-    if (req.user.id === req.params.id || req.user.role == "ADMIN") {
+    if (req.user.id || req.user.role == "ADMIN") {
       next();
     } else {
       res.status(403).json("You are not alowed to do that!");
@@ -33,7 +33,7 @@ const verifyTokenAndAuthorization = (req:any, res:any, next:any) => {
 //TOKEN WITH ADMIN LOGIN AUTHORIZATION
 const verifyTokenAndAdmin = (req:any, res:any, next:any) => {
   verifyToken(req, res, () => {
-    if (req.user.isAdmin == "ADMIN") {
+    if (req.user.role == "ADMIN") {
       next();
     } else {
       res.status(403).json("You are not alowed to do that!");

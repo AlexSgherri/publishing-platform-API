@@ -11,7 +11,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const router = require("express").Router();
 const index_1 = require("../index");
-router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const { verifyToken } = require("../token/verifyToken");
+router.post("/:id", verifyToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const topics = yield index_1.prisma.topics.create({
             data: {
@@ -28,7 +29,7 @@ router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         index_1.prisma.$disconnect();
     }
 }));
-router.delete("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.delete("/", verifyToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const user = yield index_1.prisma.user.update({
             where: {

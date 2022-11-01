@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const router = require("express").Router();
 const index_1 = require("../index");
+const { verifyToken } = require("../token/verifyToken");
 const topics = ["roba", "roba2", "roba3"];
 //FIND POST BY DATE
 // router.get("/foryou", async (req: any, res: any) => {
@@ -34,7 +35,7 @@ const topics = ["roba", "roba2", "roba3"];
 //   }
 // });
 //CREATE POST
-router.post("/create", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post("/create", verifyToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const post = yield index_1.prisma.post.create({
             data: {
@@ -56,7 +57,7 @@ router.post("/create", (req, res) => __awaiter(void 0, void 0, void 0, function*
     }
 }));
 //FIND POST BY TOPIC
-router.get("/find/:topic", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/find/:topic", verifyToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const posts = yield index_1.prisma.post.findMany({
             where: {
