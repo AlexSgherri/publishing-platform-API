@@ -3,12 +3,13 @@ const jwt = require("jsonwebtoken");
 //THE TOKEN WILL BE SAVE IN HEADERS AS --- "token" ---
 
 //TOKEN WITH NO OTHERS AUTHORIZATION
-const verifyToken = (req, res, next) => {
+
+const verifyToken = (req:any, res:any, next:any) => {
   const authHeader = req.headers.token;
 
   if (authHeader) {
     const token = authHeader.split(" ")[1];
-    jwt.verify(token, process.env.JWT_KEY, (err, user) => {
+    jwt.verify(token, process.env.JWT_KEY, (err:any, user:any) => {
       if(err) res.status(403).json("Token is not valid!");
       req.user = user;
       next();
@@ -19,7 +20,7 @@ const verifyToken = (req, res, next) => {
 };
 
 //TOKEN WITH STANDARD LOGIN AUTHORIZATION
-const verifyTokenAndAuthorization = (req, res, next) => {
+const verifyTokenAndAuthorization = (req:any, res:any, next:any) => {
   verifyToken(req, res, () => {
     if (req.user.id === req.params.id || req.user.role == "ADMIN") {
       next();
@@ -30,7 +31,7 @@ const verifyTokenAndAuthorization = (req, res, next) => {
 };
 
 //TOKEN WITH ADMIN LOGIN AUTHORIZATION
-const verifyTokenAndAdmin = (req, res, next) => {
+const verifyTokenAndAdmin = (req:any, res:any, next:any) => {
   verifyToken(req, res, () => {
     if (req.user.isAdmin == "ADMIN") {
       next();
