@@ -15,6 +15,7 @@ router.post("/register", async (req: any, res: any) => {
           process.env.SECRET_PSW
         ).toString(),
         age: req.body.age,
+        avatar: req.body.avatar,
         name: req.body.name,
         role: req.body.role,
       },

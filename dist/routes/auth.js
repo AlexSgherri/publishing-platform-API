@@ -33,6 +33,7 @@ router.post("/register", (req, res) => __awaiter(void 0, void 0, void 0, functio
                 email: req.body.email.toLowerCase(),
                 password: CryptoJS.AES.encrypt(req.body.password, process.env.SECRET_PSW).toString(),
                 age: req.body.age,
+                avatar: req.body.avatar,
                 name: req.body.name,
                 role: req.body.role,
             },
