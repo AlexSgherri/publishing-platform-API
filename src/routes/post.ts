@@ -4,30 +4,21 @@ const { verifyToken } = require("../token/verifyToken");
 
 const topics =["roba", "roba2", "roba3"]
 
-//FIND POST BY DATE
-// router.get("/foryou", async (req: any, res: any) => {
-//   const date = new Date();
-
-//   try {
-//     const posts = await prisma.post.findMany({
-//       where: {
-//         updatedAt: {
-//           lte: date
-//         }
-//       },
-//       take: 10,
-//       include:{
-
-//       }
-//     });
-
-//     res.status(200).json(req.params.a);
-//   } catch (err) {
-//     res.status(404).json(err);
-//   } finally {
-//     prisma.$disconnect();
-//   }
-// });
+//FIND ALL POST FOR USERS TOPICS
+router.post("/find", async (req: any, res: any) => {
+  try {
+    const posts = await prisma.post.findMany({
+      where: {
+        topic: { hasSome: req.body.topics },
+      },
+    });
+    res.status(200).json(posts);
+  } catch (err) {
+    res.status(404).json(err);
+  } finally {
+    prisma.$disconnect();
+  }
+});
 
 //CREATE POST
 router.post("/create", verifyToken ,async (req: any, res: any) => {
@@ -58,6 +49,9 @@ router.get("/find/:topic", verifyToken ,async (req: any, res: any) => {
         topic: {
           has: req.params.topic,
         },
+      },
+      include:{
+        author: true
       },
       take: 10,
     });

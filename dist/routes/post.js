@@ -65,6 +65,9 @@ router.get("/find/:topic", verifyToken, (req, res) => __awaiter(void 0, void 0, 
                     has: req.params.topic,
                 },
             },
+            include: {
+                author: true
+            },
             take: 10,
         });
         res.status(200).json(posts);

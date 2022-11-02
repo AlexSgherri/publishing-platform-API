@@ -11,6 +11,7 @@ model User {
   id       String   @id @default(uuid())
   username String   @unique
   email    String   @unique
+  avatar   String?
   password String
   name     String?
   age      Int?
