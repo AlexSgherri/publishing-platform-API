@@ -13,27 +13,23 @@ const router = require("express").Router();
 const index_1 = require("../index");
 const { verifyToken } = require("../token/verifyToken");
 const topics = ["roba", "roba2", "roba3"];
-//FIND POST BY DATE
-// router.get("/foryou", async (req: any, res: any) => {
-//   const date = new Date();
-//   try {
-//     const posts = await prisma.post.findMany({
-//       where: {
-//         updatedAt: {
-//           lte: date
-//         }
-//       },
-//       take: 10,
-//       include:{
-//       }
-//     });
-//     res.status(200).json(req.params.a);
-//   } catch (err) {
-//     res.status(404).json(err);
-//   } finally {
-//     prisma.$disconnect();
-//   }
-// });
+//FIND ALL POST FOR USERS TOPICS
+router.post("/find", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const posts = yield index_1.prisma.post.findMany({
+            where: {
+                topic: { hasSome: req.body.topics },
+            },
+        });
+        res.status(200).json(posts);
+    }
+    catch (err) {
+        res.status(404).json(err);
+    }
+    finally {
+        index_1.prisma.$disconnect();
+    }
+}));
 //CREATE POST
 router.post("/create", verifyToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
