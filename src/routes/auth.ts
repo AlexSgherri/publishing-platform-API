@@ -3,6 +3,20 @@ import { prisma } from "../index";
 const CryptoJS = require("crypto-js");
 const jwt = require("jsonwebtoken");
 
+const InitialTopics = [
+  "Data Science",
+  "Film",
+  "Technology",
+  "Programming",
+  "Gaming",
+  "Self Improvement",
+  "Writing",
+  "Relationships",
+  "Machine Learning",
+  "Productivity",
+  "Politics",
+];
+
 //REGISTER
 router.post("/register", async (req: any, res: any) => {
   try {
@@ -18,6 +32,9 @@ router.post("/register", async (req: any, res: any) => {
         avatar: req.body.avatar,
         name: req.body.name,
         role: req.body.role,
+        Topics: {
+          create: { topics: InitialTopics },
+        },
       },
     });
     res.status(200).json(user);
@@ -55,11 +72,21 @@ router.post("/login", async (req: any, res: any) => {
       { expiresIn: "3d" }
     );
 
-    const {password, ...others} = user
+    const { password, ...others } = user;
 
-    res.status(200).json({...others, accessToken});
+    res.status(200).json({ ...others, accessToken });
   } catch (err) {
     res.status(404).json(err);
+  } finally {
+    prisma.$disconnect();
+  }
+});
+
+router.get("/topics", async (req: any, res: any) => {
+  try {
+    res.status(200).json(InitialTopics);
+  } catch (err) {
+    console.error("error executing query:", err);
   } finally {
     prisma.$disconnect();
   }

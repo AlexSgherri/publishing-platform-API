@@ -24,6 +24,19 @@ const router = require("express").Router();
 const index_1 = require("../index");
 const CryptoJS = require("crypto-js");
 const jwt = require("jsonwebtoken");
+const InitialTopics = [
+    "Data Science",
+    "Film",
+    "Technology",
+    "Programming",
+    "Gaming",
+    "Self Improvement",
+    "Writing",
+    "Relationships",
+    "Machine Learning",
+    "Productivity",
+    "Politics",
+];
 //REGISTER
 router.post("/register", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -36,6 +49,9 @@ router.post("/register", (req, res) => __awaiter(void 0, void 0, void 0, functio
                 avatar: req.body.avatar,
                 name: req.body.name,
                 role: req.body.role,
+                Topics: {
+                    create: { topics: InitialTopics },
+                },
             },
         });
         res.status(200).json(user);
@@ -68,6 +84,17 @@ router.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
     catch (err) {
         res.status(404).json(err);
+    }
+    finally {
+        index_1.prisma.$disconnect();
+    }
+}));
+router.get("/topics", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        res.status(200).json(InitialTopics);
+    }
+    catch (err) {
+        console.error("error executing query:", err);
     }
     finally {
         index_1.prisma.$disconnect();
