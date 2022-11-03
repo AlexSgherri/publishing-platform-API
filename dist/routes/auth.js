@@ -50,7 +50,7 @@ router.post("/register", (req, res) => __awaiter(void 0, void 0, void 0, functio
                 name: req.body.name,
                 role: req.body.role,
                 Topics: {
-                    create: { topics: InitialTopics },
+                    create: { topics: req.body.topics },
                 },
             },
         });

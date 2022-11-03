@@ -33,7 +33,7 @@ router.post("/register", async (req: any, res: any) => {
         name: req.body.name,
         role: req.body.role,
         Topics: {
-          create: { topics: InitialTopics },
+          create: { topics: req.body.topics },
         },
       },
     });
