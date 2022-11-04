@@ -2,7 +2,6 @@ const router = require("express").Router();
 import { prisma } from "../index";
 const { verifyToken } = require("../token/verifyToken");
 
-const topics =["roba", "roba2", "roba3"]
 
 //FIND ALL POST FOR USERS TOPICS
 router.post("/find", async (req: any, res: any) => {
@@ -63,6 +62,5 @@ router.get("/find/:topic", verifyToken ,async (req: any, res: any) => {
     prisma.$disconnect();
   }
 });
-
 
 module.exports = router;

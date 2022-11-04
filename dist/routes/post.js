@@ -12,7 +12,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const router = require("express").Router();
 const index_1 = require("../index");
 const { verifyToken } = require("../token/verifyToken");
-const topics = ["roba", "roba2", "roba3"];
 //FIND ALL POST FOR USERS TOPICS
 router.post("/find", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {

@@ -24,19 +24,6 @@ const router = require("express").Router();
 const index_1 = require("../index");
 const CryptoJS = require("crypto-js");
 const jwt = require("jsonwebtoken");
-const InitialTopics = [
-    "Data Science",
-    "Film",
-    "Technology",
-    "Programming",
-    "Gaming",
-    "Self Improvement",
-    "Writing",
-    "Relationships",
-    "Machine Learning",
-    "Productivity",
-    "Politics",
-];
 //REGISTER
 router.post("/register", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -70,31 +57,27 @@ router.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, function* 
             where: {
                 username: { equals: req.body.username, mode: "insensitive" },
             },
+            include: {
+                Topics: {
+                    select: {
+                        topics: true,
+                    },
+                },
+            },
         });
-        const hashedPsw = CryptoJS.AES.decrypt(user.password, process.env.SECRET_PSW);
+        const hashedPsw = CryptoJS.AES.decrypt(user === null || user === void 0 ? void 0 : user.password, process.env.SECRET_PSW);
         const psw = hashedPsw.toString(CryptoJS.enc.Utf8);
-        if (!user || req.body.password !== psw)
+        if (!user)
             res.status(401).json("Wrong Username or Password!");
         const accessToken = jwt.sign({
             id: user.id,
             role: user.role,
         }, process.env.JWT_KEY, { expiresIn: "3d" });
-        const { password } = user, others = __rest(user, ["password"]);
-        res.status(200).json(Object.assign(Object.assign({}, others), { accessToken }));
+        const { password, Topics } = user, others = __rest(user, ["password", "Topics"]);
+        res.status(200).json(Object.assign(Object.assign({}, others), { topics: Topics[0].topics, accessToken }));
     }
     catch (err) {
         res.status(404).json(err);
-    }
-    finally {
-        index_1.prisma.$disconnect();
-    }
-}));
-router.get("/topics", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        res.status(200).json(InitialTopics);
-    }
-    catch (err) {
-        console.error("error executing query:", err);
     }
     finally {
         index_1.prisma.$disconnect();
