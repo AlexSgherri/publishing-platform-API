@@ -29,6 +29,27 @@ router.post("/find", (req, res) => __awaiter(void 0, void 0, void 0, function* (
         index_1.prisma.$disconnect();
     }
 }));
+//FIND ALL POST FOR A USER ID
+router.get("/find/author/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const posts = yield index_1.prisma.post.findMany({
+            where: {
+                authorId: { in: req.params.id },
+            },
+            include: {
+                author: true
+            },
+        });
+        res.status(200).json(posts);
+    }
+    catch (err) {
+        console.log(err);
+        res.status(404).json(err);
+    }
+    finally {
+        index_1.prisma.$disconnect();
+    }
+}));
 //CREATE POST
 router.post("/create", verifyToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -42,9 +63,11 @@ router.post("/create", verifyToken, (req, res) => __awaiter(void 0, void 0, void
                 authorId: req.body.authorId,
             },
         });
+        console.log("success");
         res.status(200).json(post);
     }
     catch (err) {
+        console.log("problem");
         console.error("error executing query:", err);
     }
     finally {
