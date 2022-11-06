@@ -4,6 +4,7 @@ const cors = require("cors")
 const authRoutes = require("./routes/auth")
 const postRoutes = require("./routes/post")
 const topicsRoutes = require("./routes/topics")
+const savedRoutes = require("./routes/saved")
 const { PrismaClient } = require("@prisma/client");
 
 export const prisma = new PrismaClient();
@@ -17,6 +18,7 @@ app.use(express.json());
 app.use("/api/auth", authRoutes)
 app.use("/api/post", postRoutes)
 app.use("/api/topics", topicsRoutes)
+app.use("/api/saved",savedRoutes)
 
 // //HTTP ERROR HANDLER
 // app.use((req:any, res:any, next:any)=>{
