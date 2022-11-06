@@ -65,9 +65,11 @@ router.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 },
             },
         });
+        if (!user)
+            res.status(401).json("Wrong Username or Password!");
         const hashedPsw = CryptoJS.AES.decrypt(user === null || user === void 0 ? void 0 : user.password, process.env.SECRET_PSW);
         const psw = hashedPsw.toString(CryptoJS.enc.Utf8);
-        if (!user)
+        if (psw !== req.body.password)
             res.status(401).json("Wrong Username or Password!");
         const accessToken = jwt.sign({
             id: user.id,

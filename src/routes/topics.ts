@@ -81,14 +81,14 @@ router.put("/:id", verifyToken, async (req: any, res: any) => {
       },
     });
 
-    req.body.topics.map((ele: string) => topicList.topics.push(ele));
+    const newTopicList = req.body.topics.concat(topicList.topics)
 
     const updatedList = await prisma.topics.update({
       where: {
         userId: req.params.id,
       },
       data: {
-        topics: topicList.topics,
+        topics: newTopicList,
       },
     });
 
