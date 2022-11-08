@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const router = require("express").Router();
 const index_1 = require("../index");
 const { verifyToken } = require("../token/verifyToken");
-//CREATE TOPIC LIST BY USER ID
+//SAVE POST OR REMOVE SAVED STATUS
 router.post("/", verifyToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const post = yield index_1.prisma.saved.findFirst({
@@ -26,8 +26,8 @@ router.post("/", verifyToken, (req, res) => __awaiter(void 0, void 0, void 0, fu
             save = yield index_1.prisma.saved.deleteMany({
                 where: {
                     postId: req.body.postId,
-                    userId: req.body.userId
-                }
+                    userId: req.body.userId,
+                },
             });
         }
         else {
@@ -35,11 +35,39 @@ router.post("/", verifyToken, (req, res) => __awaiter(void 0, void 0, void 0, fu
                 data: {
                     userId: req.body.userId,
                     postId: req.body.postId,
-                    saved: true
+                    saved: true,
                 },
             });
         }
         res.status(200).json(save);
+    }
+    catch (err) {
+        res.status(404).json(err);
+    }
+    finally {
+        index_1.prisma.$disconnect();
+    }
+}));
+//GET ALL SAVED POST FOR A SINGLE USER BY ID
+router.get("/:id", verifyToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const postsId = yield index_1.prisma.saved.findMany({
+            where: {
+                userId: req.params.id,
+            },
+            select: {
+                postId: true,
+            },
+        });
+        const postIdList = postsId.map((ele) => ele.postId);
+        const postsList = yield index_1.prisma.post.findMany({
+            where: {
+                id: {
+                    in: postIdList,
+                },
+            },
+        });
+        res.status(200).json(postsList);
     }
     catch (err) {
         res.status(404).json(err);

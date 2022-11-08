@@ -20,7 +20,7 @@ app.use("/api/topics", topicsRoutes);
 app.use("/api/saved", savedRoutes);
 // //HTTP ERROR HANDLER
 // app.use((req:any, res:any, next:any)=>{
-//   res.status(404).send("Could not find route");
+//   res.status(404).send("Could not find route"); 
 // })
 app.use((error, req, res, next) => {
     if (res.headerSent) {
