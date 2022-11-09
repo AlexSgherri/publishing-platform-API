@@ -12,6 +12,27 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const router = require("express").Router();
 const index_1 = require("../index");
 const { verifyToken } = require("../token/verifyToken");
+//FIND A POST BY ID
+router.get("/get/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(req.params.id);
+    try {
+        const posts = yield index_1.prisma.post.findUnique({
+            where: {
+                id: req.params.id
+            },
+            include: {
+                author: true
+            }
+        });
+        res.status(200).json(posts);
+    }
+    catch (err) {
+        res.status(404).json(err);
+    }
+    finally {
+        index_1.prisma.$disconnect();
+    }
+}));
 //FIND ALL POST FOR USERS TOPICS
 router.post("/find", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -84,10 +105,7 @@ router.get("/find/:topic", verifyToken, (req, res) => __awaiter(void 0, void 0, 
                 },
             },
             include: {
-                author: {
-                    select: { avatar: true,
-                        username: true, },
-                },
+                author: true,
             },
             take: 10,
         });
