@@ -37,7 +37,7 @@ router.get("/find/author/:id", (req, res) => __awaiter(void 0, void 0, void 0, f
                 authorId: { in: req.params.id },
             },
             include: {
-                author: true
+                author: true,
             },
         });
         res.status(200).json(posts);
@@ -84,7 +84,10 @@ router.get("/find/:topic", verifyToken, (req, res) => __awaiter(void 0, void 0, 
                 },
             },
             include: {
-                author: true
+                author: {
+                    select: { avatar: true,
+                        username: true, },
+                },
             },
             take: 10,
         });
