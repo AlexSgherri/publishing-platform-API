@@ -13,7 +13,16 @@ const InitialTopics: string[] = [
   "Relationships",
   "Machine Learning",
   "Productivity",
+  "Artificial Intelligence",
   "Politics",
+  "Development",
+  "Coding",
+  "Cryptocurrency",
+  "Blockchain",
+  "Frameworks",
+  "Cybersecurity",
+  "Biometrics",
+  "Mobile"
 ];
 
 //GET ALL TOPICS
