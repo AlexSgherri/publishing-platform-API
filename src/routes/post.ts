@@ -27,6 +27,11 @@ router.get("/find/author/:id", async (req: any, res: any) => {
       },
       include: {
         author: true,
+        Saved:{
+          select:{
+            userId: true
+          }
+        }  
       },
     });
     res.status(200).json(posts);
@@ -76,6 +81,11 @@ router.get("/find/:topic", verifyToken, async (req: any, res: any) => {
           select: { avatar: true,
           username: true, },
         },
+        Saved:{
+          select:{
+            userId: true
+          }
+        }
       },
       take: 10,
     });

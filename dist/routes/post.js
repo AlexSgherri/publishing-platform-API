@@ -38,6 +38,11 @@ router.get("/find/author/:id", (req, res) => __awaiter(void 0, void 0, void 0, f
             },
             include: {
                 author: true,
+                Saved: {
+                    select: {
+                        userId: true
+                    }
+                }
             },
         });
         res.status(200).json(posts);
@@ -88,6 +93,11 @@ router.get("/find/:topic", verifyToken, (req, res) => __awaiter(void 0, void 0, 
                     select: { avatar: true,
                         username: true, },
                 },
+                Saved: {
+                    select: {
+                        userId: true
+                    }
+                }
             },
             take: 10,
         });
