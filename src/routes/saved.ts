@@ -62,11 +62,11 @@ router.get("/:id", verifyToken, async (req: any, res: any) => {
         id: {
           in: postIdList,
         },
-        include: {
-          author: {
-            select: { avatar: true,
-            username: true, },
-          },
+      },
+      include: {
+        author: {
+          select: { avatar: true,
+          username: true, },
         },
       },
     });
