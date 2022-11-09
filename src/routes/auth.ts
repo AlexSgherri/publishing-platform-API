@@ -44,6 +44,11 @@ router.post("/login", async (req: any, res: any) => {
             topics: true,
           },
         },
+        Saved:{
+          select:{
+            postId: true
+          }
+        }
       },
     });
 
