@@ -63,6 +63,12 @@ router.get("/:id", verifyToken, async (req: any, res: any) => {
           in: postIdList,
         },
       },
+      include: {
+        author: {
+          select: { avatar: true,
+          username: true, },
+        },
+      },
     });
 
     res.status(200).json(postsList);
