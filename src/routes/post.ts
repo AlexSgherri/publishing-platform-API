@@ -8,11 +8,11 @@ router.get("/get/:id", async (req: any, res: any) => {
   try {
     const posts = await prisma.post.findUnique({
       where: {
-        id: req.params.id
+        id: req.params.id,
       },
       include: {
-        author: true
-      }
+        author: true,
+      },
     });
     res.status(200).json(posts);
   } catch (err) {
@@ -47,6 +47,11 @@ router.get("/find/author/:id", async (req: any, res: any) => {
       },
       include: {
         author: true,
+        Saved: {
+          select: {
+            userId: true,
+          },
+        },
       },
     });
     res.status(200).json(posts);
@@ -92,7 +97,14 @@ router.get("/find/:topic", verifyToken, async (req: any, res: any) => {
         },
       },
       include: {
-        author: true,
+        author: {
+          select: { avatar: true, username: true },
+        },
+        Saved: {
+          select: {
+            userId: true,
+          },
+        },
       },
       take: 10,
     });

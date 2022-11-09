@@ -18,11 +18,11 @@ router.get("/get/:id", (req, res) => __awaiter(void 0, void 0, void 0, function*
     try {
         const posts = yield index_1.prisma.post.findUnique({
             where: {
-                id: req.params.id
+                id: req.params.id,
             },
             include: {
-                author: true
-            }
+                author: true,
+            },
         });
         res.status(200).json(posts);
     }
@@ -59,6 +59,11 @@ router.get("/find/author/:id", (req, res) => __awaiter(void 0, void 0, void 0, f
             },
             include: {
                 author: true,
+                Saved: {
+                    select: {
+                        userId: true,
+                    },
+                },
             },
         });
         res.status(200).json(posts);
@@ -105,7 +110,14 @@ router.get("/find/:topic", verifyToken, (req, res) => __awaiter(void 0, void 0, 
                 },
             },
             include: {
-                author: true,
+                author: {
+                    select: { avatar: true, username: true },
+                },
+                Saved: {
+                    select: {
+                        userId: true,
+                    },
+                },
             },
             take: 10,
         });
