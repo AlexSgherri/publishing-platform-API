@@ -63,6 +63,11 @@ router.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, function* 
                         topics: true,
                     },
                 },
+                Saved: {
+                    select: {
+                        postId: true
+                    }
+                }
             },
         });
         if (!user)

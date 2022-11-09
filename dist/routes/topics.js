@@ -23,7 +23,16 @@ const InitialTopics = [
     "Relationships",
     "Machine Learning",
     "Productivity",
+    "Artificial Intelligence",
     "Politics",
+    "Development",
+    "Coding",
+    "Cryptocurrency",
+    "Blockchain",
+    "Frameworks",
+    "Cybersecurity",
+    "Biometrics",
+    "Mobile"
 ];
 //GET ALL TOPICS
 router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
