@@ -56,7 +56,6 @@ router.get("/find/author/:id", async (req: any, res: any) => {
     });
     res.status(200).json(posts);
   } catch (err) {
-    console.log(err);
     res.status(404).json(err);
   } finally {
     prisma.$disconnect();
@@ -76,11 +75,9 @@ router.post("/create", verifyToken, async (req: any, res: any) => {
         authorId: req.body.authorId,
       },
     });
-    console.log("success");
 
     res.status(200).json(post);
   } catch (err) {
-    console.log("problem");
     console.error("error executing query:", err);
   } finally {
     prisma.$disconnect();
