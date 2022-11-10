@@ -69,7 +69,6 @@ router.get("/find/author/:id", (req, res) => __awaiter(void 0, void 0, void 0, f
         res.status(200).json(posts);
     }
     catch (err) {
-        console.log(err);
         res.status(404).json(err);
     }
     finally {
@@ -89,11 +88,9 @@ router.post("/create", verifyToken, (req, res) => __awaiter(void 0, void 0, void
                 authorId: req.body.authorId,
             },
         });
-        console.log("success");
         res.status(200).json(post);
     }
     catch (err) {
-        console.log("problem");
         console.error("error executing query:", err);
     }
     finally {

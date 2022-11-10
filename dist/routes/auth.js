@@ -65,23 +65,31 @@ router.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 },
                 Saved: {
                     select: {
-                        postId: true
-                    }
-                }
+                        postId: true,
+                    },
+                },
             },
         });
-        if (!user)
+        if (user === null) {
             res.status(401).json("Wrong Username or Password!");
-        const hashedPsw = CryptoJS.AES.decrypt(user === null || user === void 0 ? void 0 : user.password, process.env.SECRET_PSW);
-        const psw = hashedPsw.toString(CryptoJS.enc.Utf8);
-        if (psw !== req.body.password)
-            res.status(401).json("Wrong Username or Password!");
-        const accessToken = jwt.sign({
-            id: user.id,
-            role: user.role,
-        }, process.env.JWT_KEY, { expiresIn: "3d" });
-        const { password, Topics } = user, others = __rest(user, ["password", "Topics"]);
-        res.status(200).json(Object.assign(Object.assign({}, others), { topics: Topics[0].topics, accessToken }));
+        }
+        else {
+            const hashedPsw = CryptoJS.AES.decrypt(user === null || user === void 0 ? void 0 : user.password, process.env.SECRET_PSW);
+            const psw = hashedPsw.toString(CryptoJS.enc.Utf8);
+            if (psw !== req.body.password) {
+                res.status(401).json("Wrong Username or Password!");
+            }
+            else {
+                const accessToken = jwt.sign({
+                    id: user.id,
+                    role: user.role,
+                }, process.env.JWT_KEY, { expiresIn: "3d" });
+                const { password, Topics } = user, others = __rest(user, ["password", "Topics"]);
+                res
+                    .status(200)
+                    .json(Object.assign(Object.assign({}, others), { topics: Topics[0].topics, accessToken }));
+            }
+        }
     }
     catch (err) {
         res.status(404).json(err);

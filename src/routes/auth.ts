@@ -44,36 +44,42 @@ router.post("/login", async (req: any, res: any) => {
             topics: true,
           },
         },
-        Saved:{
-          select:{
-            postId: true
-          }
-        }
+        Saved: {
+          select: {
+            postId: true,
+          },
+        },
       },
     });
 
-    if (!user) res.status(401).json("Wrong Username or Password!");
+    if (user === null) {
+      res.status(401).json("Wrong Username or Password!");
+    } else {
+      const hashedPsw = CryptoJS.AES.decrypt(
+        user?.password,
+        process.env.SECRET_PSW
+      );
+      const psw = hashedPsw.toString(CryptoJS.enc.Utf8);
 
-    const hashedPsw = CryptoJS.AES.decrypt(
-      user?.password,
-      process.env.SECRET_PSW
-    );
-    const psw = hashedPsw.toString(CryptoJS.enc.Utf8);
+      if (psw !== req.body.password) {
+        res.status(401).json("Wrong Username or Password!");
+      } else {
+        const accessToken = jwt.sign(
+          {
+            id: user.id,
+            role: user.role,
+          },
+          process.env.JWT_KEY,
+          { expiresIn: "3d" }
+        );
 
-    if(psw !== req.body.password) res.status(401).json("Wrong Username or Password!");
+        const { password, Topics, ...others } = user;
 
-    const accessToken = jwt.sign(
-      {
-        id: user.id,
-        role: user.role,
-      },
-      process.env.JWT_KEY,
-      { expiresIn: "3d" }
-    );
-
-    const { password, Topics ,...others } = user;
-
-    res.status(200).json({ ...others, topics:Topics[0].topics ,accessToken });
+        res
+          .status(200)
+          .json({ ...others, topics: Topics[0].topics, accessToken });
+      }
+    }
   } catch (err) {
     res.status(404).json(err);
   } finally {
